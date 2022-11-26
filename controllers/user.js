@@ -43,7 +43,8 @@ export async function login(req, res) {
 		res.cookie('refreshToken', tokens.refresh, {
 			maxAge: 30 * 24 * 3600 * 1000,
 			httpOnly: true,
-			secure: false,
+			secure: true,
+			sameSite: 'none',
 		})
 
 		return res.json({ user, access: tokens.access })
