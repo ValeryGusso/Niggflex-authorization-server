@@ -40,10 +40,13 @@ export async function login(req, res) {
 	try {
 		const { email, password } = req.body
 		const { user, tokens } = await UserService.login(email, password)
+		res.header('Access-Control-Allow-Origin', req.headers.origin) // попытка фикса
+		res.header('Access-Control-Allow-Credentials', true) // попытка фикса
 		res.cookie('refreshToken', tokens.refresh, {
 			maxAge: 30 * 24 * 3600 * 1000,
 			httpOnly: true,
 			secure: true,
+			SameSite: 'none',
 			sameSite: 'none',
 		})
 
@@ -70,7 +73,9 @@ export async function refresh(req, res) {
 	try {
 		const { refreshToken } = req.cookies
 
-		const { user, access, refresh } = await TokenService.refresh(refreshToken)
+		const { user, access, refresh } = await TokenService.refresh(refreshToken) // попытка фикса
+		res.header('Access-Control-Allow-Origin', req.headers.origin) // попытка фикса
+		res.header('Access-Control-Allow-Credentials', true)
 		res.cookie('refreshToken', refresh, { maxAge: 30 * 24 * 3600 * 1000, httpOnly: true, secure: false })
 
 		return res.json({ user, access })
