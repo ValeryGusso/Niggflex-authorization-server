@@ -43,7 +43,7 @@ export async function login(req, res) {
 		res.cookie('refreshToken', tokens.refresh, {
 			maxAge: 30 * 24 * 3600 * 1000,
 			httpOnly: true,
-			secure: true,
+			secure: false,
 		})
 
 		return res.json({ user, access: tokens.access })
@@ -55,7 +55,6 @@ export async function login(req, res) {
 export async function logout(req, res) {
 	try {
 		const { refreshToken } = req.cookies
-		console.log(req.cookies)
 
 		const success = await UserService.logout(refreshToken)
 
