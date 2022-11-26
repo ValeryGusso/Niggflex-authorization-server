@@ -55,6 +55,7 @@ export async function login(req, res) {
 export async function logout(req, res) {
 	try {
 		const { refreshToken } = req.cookies
+		console.log(req.cookies)
 
 		const success = await UserService.logout(refreshToken)
 
