@@ -19,8 +19,7 @@ export async function registration(req, res) {
 			httpOnly: true,
 			secure: false,
 			SameSite: 'none',
-			sameSite: 'none',
-			domain: process.env.CLIENT_URL
+			domain: process.env.COOKIE_DOMAIN,
 		})
 
 		return res.json(user)
@@ -53,18 +52,8 @@ export async function login(req, res) {
 			httpOnly: true,
 			secure: true,
 			SameSite: 'none',
-			sameSite: 'none',
-			domain: process.env.CLIENT_URL
+			domain: process.env.COOKIE_DOMAIN,
 		})
-		res.cookie('test', 'Test text', {
-			maxAge: 30 * 24 * 3600 * 1000,
-			httpOnly: false,
-			secure: true,
-			SameSite: 'none',
-			sameSite: 'none',
-			domain: process.env.CLIENT_URL
-		})
-		res.cookie('test2', 'Test2 text')
 
 		return res.json({ user, access: tokens.access })
 	} catch (err) {
@@ -79,8 +68,6 @@ export async function logout(req, res) {
 		const success = await UserService.logout(refreshToken)
 
 		res.clearCookie('refreshToken')
-		res.clearCookie('test')
-		res.clearCookie('test2')
 		return res.json(success)
 	} catch (err) {
 		return res.status(500).json({ success: false, message: err.message })
@@ -92,13 +79,13 @@ export async function refresh(req, res) {
 		const { refreshToken } = req.cookies
 
 		const { user, access, refresh } = await TokenService.refresh(refreshToken)
+
 		res.cookie('refreshToken', refresh, {
 			maxAge: 30 * 24 * 3600 * 1000,
 			httpOnly: true,
 			secure: true,
 			SameSite: 'none',
-			sameSite: 'none',
-			domain: process.env.CLIENT_URL
+			domain: process.env.COOKIE_DOMAIN,
 		})
 
 		return res.json({ user, access })
