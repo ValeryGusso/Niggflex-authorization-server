@@ -20,6 +20,7 @@ export async function registration(req, res) {
 			secure: false,
 			SameSite: 'none',
 			sameSite: 'none',
+			domain: process.env.CLIENT_URL
 		})
 
 		return res.json(user)
@@ -46,12 +47,14 @@ export async function login(req, res) {
 	try {
 		const { email, password } = req.body
 		const { user, tokens } = await UserService.login(email, password)
+
 		res.cookie('refreshToken', tokens.refresh, {
 			maxAge: 30 * 24 * 3600 * 1000,
 			httpOnly: true,
 			secure: true,
 			SameSite: 'none',
 			sameSite: 'none',
+			domain: process.env.CLIENT_URL
 		})
 		res.cookie('test', 'Test text', {
 			maxAge: 30 * 24 * 3600 * 1000,
@@ -59,6 +62,7 @@ export async function login(req, res) {
 			secure: true,
 			SameSite: 'none',
 			sameSite: 'none',
+			domain: process.env.CLIENT_URL
 		})
 		res.cookie('test2', 'Test2 text')
 
@@ -94,6 +98,7 @@ export async function refresh(req, res) {
 			secure: true,
 			SameSite: 'none',
 			sameSite: 'none',
+			domain: process.env.CLIENT_URL
 		})
 
 		return res.json({ user, access })
