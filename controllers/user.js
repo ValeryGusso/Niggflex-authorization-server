@@ -14,7 +14,13 @@ export async function registration(req, res) {
 
 		const { email, password } = req.body
 		const user = await UserService.registration(email, password)
-		res.cookie('refreshToken', user.refresh, { maxAge: 30 * 24 * 3600 * 1000, httpOnly: true, secure: false })
+		res.cookie('refreshToken', user.refresh, {
+			maxAge: 30 * 24 * 3600 * 1000,
+			httpOnly: true,
+			secure: false,
+			SameSite: 'none',
+			sameSite: 'none',
+		})
 
 		return res.json(user)
 	} catch (err) {
@@ -47,6 +53,14 @@ export async function login(req, res) {
 			SameSite: 'none',
 			sameSite: 'none',
 		})
+		res.cookie('test', 'Test text', {
+			maxAge: 30 * 24 * 3600 * 1000,
+			httpOnly: false,
+			secure: true,
+			SameSite: 'none',
+			sameSite: 'none',
+		})
+		res.cookie('test2', 'Test2 text')
 
 		return res.json({ user, access: tokens.access })
 	} catch (err) {
@@ -61,6 +75,8 @@ export async function logout(req, res) {
 		const success = await UserService.logout(refreshToken)
 
 		res.clearCookie('refreshToken')
+		res.clearCookie('test')
+		res.clearCookie('test2')
 		return res.json(success)
 	} catch (err) {
 		return res.status(500).json({ success: false, message: err.message })
