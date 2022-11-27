@@ -19,6 +19,7 @@ export async function registration(req, res) {
 			httpOnly: true,
 			secure: false,
 			SameSite: 'none',
+			sameSite: 'none',
 			domain: process.env.COOKIE_DOMAIN,
 		})
 
@@ -52,6 +53,7 @@ export async function login(req, res) {
 			httpOnly: true,
 			secure: true,
 			SameSite: 'none',
+			sameSite: 'none',
 			domain: process.env.COOKIE_DOMAIN,
 		})
 
@@ -85,6 +87,7 @@ export async function refresh(req, res) {
 			httpOnly: true,
 			secure: true,
 			SameSite: 'none',
+			sameSite: 'none',
 			domain: process.env.COOKIE_DOMAIN,
 		})
 
