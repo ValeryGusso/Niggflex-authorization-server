@@ -7,7 +7,7 @@ class MailService {
 		this.transporter = nodemailer.createTransport({
 			host: process.env.MAIL_HOST,
 			port: process.env.MAIL_PORT,
-			secure: false,
+			secure: true,
 			service: 'gmail',
 			auth: {
 				user: process.env.MAIL_LOGIN,
@@ -31,6 +31,7 @@ class MailService {
 						justify-content: center;
 						background: #212325;
 						text-align: center;
+						padding: 50px 0;
 					"
 				>
 					<img

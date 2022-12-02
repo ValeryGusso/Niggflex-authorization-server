@@ -25,6 +25,7 @@ app.use(cookieParser())
 
 app.post('/registration', regValidation, userController.registration)
 app.post('/activate', userController.activate)
+app.post('/resend', userController.resendCode)
 app.post('/login', userController.login)
 app.get('/logout', userController.logout)
 app.get('/refresh', userController.refresh)

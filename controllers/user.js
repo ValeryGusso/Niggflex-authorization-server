@@ -1,6 +1,7 @@
 import UserService from '../service/user.js'
 import TokenService from '../service/token.js'
 import UserModel from '../models/user.js'
+import MailService from '../service/mail.js'
 import { validationResult } from 'express-validator'
 import UserDTO from '../user-dto.js'
 
@@ -14,14 +15,6 @@ export async function registration(req, res) {
 
 		const { email, password } = req.body
 		const user = await UserService.registration(email, password)
-		res.cookie('refreshToken', user.refresh, {
-			maxAge: 30 * 24 * 3600 * 1000,
-			httpOnly: true,
-			secure: true,
-			SameSite: 'none',
-			sameSite: 'none',
-			domain: process.env.COOKIE_DOMAIN,
-		})
 
 		return res.json(user)
 	} catch (err) {
@@ -36,7 +29,14 @@ export async function activate(req, res) {
 	try {
 		const { id, key } = req.body
 		const { user, tokens } = await UserService.activate(id, key)
-		res.cookie('refreshToken', tokens.refresh, { maxAge: 30 * 24 * 3600 * 1000, httpOnly: true, secure: false })
+		res.cookie('refreshToken', user.refresh, {
+			maxAge: 30 * 24 * 3600 * 1000,
+			httpOnly: true,
+			secure: true,
+			SameSite: 'none',
+			sameSite: 'none',
+			domain: process.env.COOKIE_DOMAIN,
+		})
 		return res.json({ user, access: tokens.access })
 	} catch (err) {
 		return res.status(500).json({ message: err.message })
@@ -233,5 +233,19 @@ export async function update(req, res) {
 		return res.json({ user: userDTO })
 	} catch (err) {
 		return res.status(500).json({ message: 'Не удалось обновить информацию' })
+	}
+}
+
+export async function resendCode(req, res) {
+	try {
+		const { email } = req.body
+
+		const user = await UserModel.findOne({ email })
+
+		const { sended } = await MailService.sendCode(email, user.key)
+
+		return res.json(sended)
+	} catch (error) {
+		return res.status(500).json({ message: 'Не удалось отправить письмо' })
 	}
 }
