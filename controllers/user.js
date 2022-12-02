@@ -17,7 +17,7 @@ export async function registration(req, res) {
 		res.cookie('refreshToken', user.refresh, {
 			maxAge: 30 * 24 * 3600 * 1000,
 			httpOnly: true,
-			secure: false,
+			secure: true,
 			SameSite: 'none',
 			sameSite: 'none',
 			domain: process.env.COOKIE_DOMAIN,
