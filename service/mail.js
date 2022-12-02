@@ -17,13 +17,14 @@ class MailService {
 	}
 	async sendCode(to, key) {
 		try {
-			await this.transporter.sendMail(
-				{
-					from: process.env.MAIL_LOGIN,
-					to,
-					subject: 'Активация аккаунта на Niggflex.',
-					text: '',
-					html: `<div
+			const message = await new Promise((res, rej) => {
+				this.transporter.sendMail(
+					{
+						from: process.env.MAIL_LOGIN,
+						to,
+						subject: 'Активация аккаунта на Niggflex.',
+						text: '',
+						html: `<div
 					style="
 						display: flex;
 						flex-direction: column;
@@ -54,14 +55,17 @@ class MailService {
 						<span style="color: #e50914; font-style: italic">Niggflex</span> - всё, что ты любишь, но немного темнее!
 					</h2>
 				</div>`,
-				},
-				err => {
-					if (err) {
-						return { sended: false, err }
+					},
+					err => {
+						if (err) {
+							rej({ sended: false, err })
+						} else {
+							res({ sended: true })
+						}
 					}
-				}
-			)
-			return { sended: true }
+				)
+			})
+			return message
 		} catch (err) {
 			return { sended: false, err }
 		}
