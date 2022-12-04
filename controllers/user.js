@@ -4,6 +4,8 @@ import UserModel from '../models/user.js'
 import MailService from '../service/mail.js'
 import { validationResult } from 'express-validator'
 import UserDTO from '../user-dto.js'
+import bcrypt from 'bcrypt'
+import fs from 'fs'
 
 export async function registration(req, res) {
 	try {
@@ -213,8 +215,7 @@ export async function removeViewed(req, res) {
 export async function update(req, res) {
 	try {
 		const user = await UserModel.findById(req.user.id)
-		const { name, sex, avatar } = req.body
-		console.log(name, sex, avatar)
+		const { name, sex, avatar, password, confirm } = req.body
 
 		if (name && name !== user.name) {
 			user.name = name
@@ -228,9 +229,14 @@ export async function update(req, res) {
 			user.avatar = avatar
 		}
 
+		if (password && confirm && password === confirm) {
+			const salt = await bcrypt.genSalt(12)
+			const passHash = await bcrypt.hash(password, salt)
+			user.password = passHash
+		}
+
 		await user.save()
-		const userDTO = new UserDTO(user)
-		return res.json({ user: userDTO })
+		getMe(req, res)
 	} catch (err) {
 		return res.status(500).json({ message: 'Не удалось обновить информацию' })
 	}
@@ -247,5 +253,26 @@ export async function resendCode(req, res) {
 		return res.json(sended)
 	} catch (error) {
 		return res.status(500).json({ message: 'Не удалось отправить письмо' })
+	}
+}
+
+export async function uploadImage(req, res) {
+	try {
+		const user = await UserModel.findById(req.user.id)
+		const prevAvatar = user.avatar.match(/\/uploads\/[\w\d]+\.\w+/gi)[0].replace('/uploads/', '')
+		user.avatar = `${process.env.SERVER_URL}/uploads/${req.file.originalname}`
+		await user.save()
+
+		if (fs.existsSync(`./uploads/${prevAvatar}`)) {
+			fs.rm('./uploads/' + prevAvatar, { recursive: true }, err => {
+				if (err) {
+					res.status(500).json({ message: 'Ошибка на сервера' })
+				}
+			})
+		}
+		const userDTO = new UserDTO(user)
+		return res.json({ ...userDTO })
+	} catch (error) {
+		res.status(500).json({ message: 'Ошибка на сервера' })
 	}
 }
