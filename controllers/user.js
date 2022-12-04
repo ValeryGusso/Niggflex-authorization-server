@@ -259,14 +259,19 @@ export async function resendCode(req, res) {
 export async function uploadImage(req, res) {
 	try {
 		const user = await UserModel.findById(req.user.id)
-		const prevAvatar = user.avatar.match(/\/uploads\/[\w\d]+\.\w+/gi)[0].replace('/uploads/', '')
+
+		let prevAvatar = user.avatar.match(/\/uploads\/[\w\d]+\.\w+/gi) || ''
+		if (prevAvatar) {
+			prevAvatar = prevAvatar[0].replace('/uploads/', '')
+		}
+
 		user.avatar = `${process.env.SERVER_URL}/uploads/${req.file.originalname}`
 		await user.save()
 
 		if (fs.existsSync(`./uploads/${prevAvatar}`)) {
 			fs.rm('./uploads/' + prevAvatar, { recursive: true }, err => {
 				if (err) {
-					res.status(500).json({ message: 'Ошибка на сервера' })
+					res.status(500).json({ message: 'Ошибка фс' })
 				}
 			})
 		}
