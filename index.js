@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
-import upload, { uploadMiddleware } from './service/image.js'
+import { uploadMiddleware } from './service/image.js'
 import * as userController from './controllers/user.js'
 import { regValidation } from './validation.js'
 dotenv.config()

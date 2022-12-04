@@ -26,5 +26,3 @@ export async function uploadMiddleware(req, res, next) {
 		})
 	})
 }
-
-export default upload
