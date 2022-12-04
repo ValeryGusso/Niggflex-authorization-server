@@ -48,7 +48,7 @@ class MailService {
 						неполадке. <br />
 						Контактные данные указаны снизу страницы.
 					</h2>
-					<h1 style="color: #ededed; padding: 15px 30px; border: 2px solid #ededed; border-radius: 15px">${key}</h1>
+					<h1 style="width: 150px; color: #ededed; padding: 15px 30px; border: 2px solid #ededed; border-radius: 15px">${key}</h1>
 					<h2 style="color: #ededed; padding: 15px 30px">
 						Это твой код для активации аккаунта на <span style="color: #e50914; font-style: italic">Niggflex</span> - лучшем
 						в мире сайте о кино! <br />
