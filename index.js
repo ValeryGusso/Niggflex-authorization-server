@@ -38,7 +38,7 @@ app.delete('/favorite', userController.checkAuth, userController.removeFavorite)
 app.patch('/viewed', userController.checkAuth, userController.addViewed)
 app.delete('/viewed', userController.checkAuth, userController.removeViewed)
 app.patch('/update', userController.checkAuth, userController.update)
-app.post('/image', userController.checkAuth, uploadMiddleware, userController.uploadImage)
+app.patch('/image', userController.checkAuth, uploadMiddleware, userController.uploadImage)
 
 app.listen(process.env.PORT, err => {
 	if (err) console.log('Server ERROR: ', err)
