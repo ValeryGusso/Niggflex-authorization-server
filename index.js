@@ -26,6 +26,13 @@ app.use(express.json())
 app.use(cookieParser())
 app.use('/uploads', express.static('uploads'))
 
+const mw = (req, res, next) => {
+	req.headers['Access-Control-Allow-Origin'] = process.env.CLIENT_URL
+	req.headers['Content-Type'] = 'multipart/form-data'
+	req.headers['Accept'] = 'multipart/form-data'
+	next()
+}
+
 app.post('/registration', regValidation, userController.registration)
 app.post('/activate', userController.activate)
 app.post('/resend', userController.resendCode)
@@ -38,7 +45,7 @@ app.delete('/favorite', userController.checkAuth, userController.removeFavorite)
 app.patch('/viewed', userController.checkAuth, userController.addViewed)
 app.delete('/viewed', userController.checkAuth, userController.removeViewed)
 app.patch('/update', userController.checkAuth, userController.update)
-app.patch('/image', userController.checkAuth, uploadMiddleware, userController.uploadImage)
+app.patch('/image', mw, userController.checkAuth, uploadMiddleware, userController.uploadImage)
 
 app.listen(process.env.PORT, err => {
 	if (err) console.log('Server ERROR: ', err)
