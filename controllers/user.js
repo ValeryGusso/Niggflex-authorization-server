@@ -104,19 +104,19 @@ export async function checkAuth(req, res, next) {
 		const token = req.headers.authorization.replace(/Bearer\s?/, '')
 
 		if (!token) {
-			return res.status(401).json({ message: 'Пользователь не авторизован' })
+			return res.status(401).json({ message: 'Нет токена авторизации' })
 		}
 
 		const verify = await TokenService.verifyAccess(token)
 
 		if (!verify) {
-			return res.status(401).json({ message: 'Пользователь не авторизован' })
+			return res.status(401).json({ message: 'Токен авторизации невалиден' })
 		}
 
 		req.user = verify
 		next()
 	} catch (err) {
-		return res.status(401).json({ message: 'Пользователь не авторизован111' })
+		return res.status(401).json({ message: 'Пользователь не авторизован' })
 	}
 }
 
