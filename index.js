@@ -19,9 +19,17 @@ app.use(
 	cors({
 		credentials: true,
 		origin: true,
-		allowedHeaders: ['Content-Type', 'Authorization', 'Vary'],
+		allowedHeaders: [
+			'Content-Type',
+			'Authorization',
+			'Vary',
+			'Access-Control-Allow-Origin',
+			'Access-Control-Allow-Credentials',
+			'Accept',
+		],
 	})
 )
+
 app.use(express.json())
 app.use(cookieParser())
 app.use('/uploads', express.static('uploads'))
