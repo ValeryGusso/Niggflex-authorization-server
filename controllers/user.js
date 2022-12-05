@@ -268,16 +268,16 @@ export async function uploadImage(req, res) {
 		user.avatar = `${process.env.SERVER_URL}/uploads/${req.file.originalname}`
 		await user.save()
 
-		if (fs.existsSync(`./uploads/${prevAvatar}`)) {
-			fs.rm('./uploads/' + prevAvatar, { recursive: true }, err => {
-				if (err) {
-					res.status(500).json({ message: 'Ошибка фс' })
-				}
-			})
-		}
+		// if (fs.existsSync(`./uploads/${prevAvatar}`)) {
+		// 	fs.rm('./uploads/' + prevAvatar, { recursive: true }, err => {
+		// 		if (err) {
+		// 			res.status(500).json({ message: 'Ошибка фс' })
+		// 		}
+		// 	})
+		// }
 		const userDTO = new UserDTO(user)
 		return res.json({ ...userDTO })
 	} catch (error) {
-		res.status(500).json({ message: 'Ошибка на сервера' })
+		res.status(500).json({ message: 'Ошибка на сервере' })
 	}
 }
