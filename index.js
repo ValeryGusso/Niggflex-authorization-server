@@ -27,6 +27,11 @@ const defaultOptions = {
 // 	})
 // )
 
+// const logger = (req, res, next) => {
+// 	console.log(req.headers)
+// 	next()
+// }
+
 app.use(express.json())
 app.use(cookieParser())
 app.use('/uploads', express.static('uploads'))
@@ -46,7 +51,12 @@ app.delete('/viewed', cors(defaultOptions), userController.checkAuth, userContro
 app.patch('/update', cors(defaultOptions), userController.checkAuth, userController.update)
 app.post(
 	'/image',
-	cors({ origin: '*', credentials: false }),
+	// logger,
+	cors({
+		origin: '*',
+		credentials: false,
+		allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
+	}),
 	userController.checkAuth,
 	uploadMiddleware,
 	userController.uploadImage
