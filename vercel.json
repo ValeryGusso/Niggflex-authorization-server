@@ -1,5 +1,4 @@
 {
 	"name": "niggflex-authorization-server",
-	"cleanUrls": true,
-	"rewrites": [{ "source": "/(.*)", "destination": "/uploads" }]
+	"cleanUrls": true
 }
