@@ -1,6 +1,5 @@
 {
 	"name": "niggflex-authorization-server",
-	"cleanUrls": true,
 	"builds": [
 		{
 			"src": "index.js",
