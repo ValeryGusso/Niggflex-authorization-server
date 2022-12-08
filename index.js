@@ -15,54 +15,33 @@ mongoose
 
 const app = express()
 
-const defaultOptions = {
-	credentials: true,
-	origin: process.env.CLIENT_URL,
-}
-
-// app.use(
-// 	cors({
-// 		credentials: true,
-// 		origin: process.env.CLIENT_URL,
-// 	})
-// )
-
-// const logger = (req, res, next) => {
-// 	console.log(req.headers)
-// 	next()
-// }
+app.use(
+	cors({
+		credentials: true,
+		origin: process.env.CLIENT_URL,
+	})
+)
 
 app.use(express.json())
 app.use(cookieParser())
 app.use('/uploads', express.static('uploads'))
 
-app.options('*', cors(defaultOptions))
-app.post('/registration', cors(defaultOptions), regValidation, userController.registration)
-app.post('/activate', cors(defaultOptions), userController.activate)
-app.post('/resend', cors(defaultOptions), userController.resendCode)
-app.post('/login', cors(defaultOptions), userController.login)
-app.get('/logout', cors(defaultOptions), userController.logout)
-app.get('/refresh', cors(defaultOptions), userController.refresh)
-app.get('/me', cors(defaultOptions), userController.checkAuth, userController.getMe)
-app.patch('/favorite', cors(defaultOptions), userController.checkAuth, userController.addFavorite)
-app.delete('/favorite', cors(defaultOptions), userController.checkAuth, userController.removeFavorite)
-app.patch('/viewed', cors(defaultOptions), userController.checkAuth, userController.addViewed)
-app.delete('/viewed', cors(defaultOptions), userController.checkAuth, userController.removeViewed)
-app.patch('/update', cors(defaultOptions), userController.checkAuth, userController.update)
-app.post(
-	'/image',
-	// logger,
-	cors({
-		origin: '*',
-		credentials: false,
-		allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
-	}),
-	userController.checkAuth,
-	uploadMiddleware,
-	userController.uploadImage
-)
+app.post('/registration', regValidation, userController.registration)
+app.post('/activate', userController.activate)
+app.post('/resend', userController.resendCode)
+app.post('/login', userController.login)
+app.get('/logout', userController.logout)
+app.get('/refresh', userController.refresh)
+app.get('/me', userController.checkAuth, userController.getMe)
+app.patch('/favorite', userController.checkAuth, userController.addFavorite)
+app.delete('/favorite', userController.checkAuth, userController.removeFavorite)
+app.patch('/viewed', userController.checkAuth, userController.addViewed)
+app.delete('/viewed', userController.checkAuth, userController.removeViewed)
+app.patch('/update', userController.checkAuth, userController.update)
+app.post('/image', userController.checkAuth, uploadMiddleware, userController.uploadImage)
 
 app.listen(process.env.PORT, err => {
-	if (err) console.log('Server ERROR: ', err)
-	console.log('Server UP')
+	if (err) {
+		console.log('Server ERROR: ', err)
+	} else console.log('Server UP')
 })
