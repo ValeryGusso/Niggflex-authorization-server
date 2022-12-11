@@ -16,14 +16,18 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 export async function uploadMiddleware(req, res, next) {
-	await new Promise((resolve, reject) => {
-		upload.single('image')(req, res, err => {
-			if (err instanceof multer.MulterError) {
-				reject(err)
-			} else {
-				resolve()
-			}
+	try {
+		await new Promise((resolve, reject) => {
+			upload.single('image')(req, res, err => {
+				if (err instanceof multer.MulterError) {
+					reject(err)
+				} else {
+					resolve()
+				}
+			})
 		})
-	})
-	next()
+		next()
+	} catch (err) {
+		throw new Error(err.message)
+	}
 }
