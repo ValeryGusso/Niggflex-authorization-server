@@ -281,3 +281,26 @@ export async function uploadImage(req, res) {
 		res.status(500).json({ message: 'Ошибка на сервере' })
 	}
 }
+
+export async function redirect(req, res) {
+	try {
+		// const { refreshToken } = req.cookies
+		// if (refreshToken) {
+		// 	const validate = TokenService.verifyRefresh(refreshToken)
+		// 	if (validate) {
+		// 		res.cookie('refreshToken', refresh, {
+		// 			maxAge: 30 * 24 * 3600 * 1000,
+		// 			httpOnly: true,
+		// 			secure: true,
+		// 			SameSite: 'none',
+		// 			sameSite: 'none',
+		// 			domain: process.env.COOKIE_DOMAIN,
+		// 		})
+		// 	}
+		// }
+		console.log(res.headers)
+		return res.redirect('http://localhost:3000/films')
+	} catch (err) {
+		res.status(401).json({ success: false, message: err.message })
+	}
+}
